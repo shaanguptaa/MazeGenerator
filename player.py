@@ -1,4 +1,4 @@
-from pygame.draw import rect, circle
+from pygame.draw import rect
 from pygame import Rect
 from pygame.sprite import Sprite
 
