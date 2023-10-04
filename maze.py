@@ -11,8 +11,13 @@ class Maze:
         self.gen_tiles()
 
         self.start_tile = (0, 0)
-        self.end_tile = (self.size[0] - 1, self.size[1] - 1)
+        
         self.tiles[self.start_tile[0]][self.start_tile[1]].visited = True
+        self.tiles[self.start_tile[0]][self.start_tile[1]].is_start = True
+
+        self.end_tile = (self.size[0] - 1, self.size[1] - 1)
+        
+        self.tiles[self.end_tile[0]][self.end_tile[1]].is_finish = True
 
     def gen_tiles(self):
         for i in range(self.size[0]):
@@ -50,7 +55,6 @@ class Maze:
         curr_tile = self.get_tile(player.row, player.col)
         
         self.tiles[curr_tile.row][curr_tile.col].visited = True
-        self.tiles[curr_tile.row][curr_tile.col].color = (255, 255, 255)
 
         new_row = curr_tile.row
         new_col = curr_tile.col
@@ -76,14 +80,12 @@ class Maze:
             self.tiles[new_row][new_col].left = False
 
         player.set_player_to_tile(self.get_tile(new_row, new_col))
-        self.tiles[new_row][new_col].color = (255, 255, 255)
         self.tiles[new_row][new_col].visited = True
 
     def move_back(self, player, played_move):
         curr_tile = self.get_tile(player.row, player.col)
         
         self.tiles[curr_tile.row][curr_tile.col].visited = False
-        self.tiles[curr_tile.row][curr_tile.col].color = (0, 255, 0)
 
         new_row = curr_tile.row
         new_col = curr_tile.col
@@ -140,7 +142,8 @@ class Maze:
                     'right': tile.right,
                     'row': tile.row,
                     'col': tile.col,
-                    'color': tile.color
+                    'is_start': tile.is_start,
+                    'is_finish': tile.is_finish
                 }
 
         with open(filename, 'w') as file:
