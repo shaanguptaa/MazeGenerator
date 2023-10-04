@@ -8,6 +8,7 @@ pygame.init()
 
 WINDOW = pygame.display.set_mode((600, 600))
 pygame.display.set_caption("Maze Generator")
+WINDOW.fill((0, 0, 0))
 
 clock = pygame.time.Clock()
 FRAMERATE = 15
@@ -25,14 +26,12 @@ def next_move():
 
     if avail_moves:
         pref_move = choice(avail_moves)
-        moves.append((PLAYER.row, PLAYER.col, pref_move))
+        moves.append(((PLAYER.row, PLAYER.col), pref_move))
         MAZE.move(PLAYER, pref_move)
-        # print(pref_move)
     else:
         # move back 1 step
-        new_row, new_col, played_move = moves.pop()
+        new_pos, played_move = moves.pop()
         MAZE.move_back(PLAYER, played_move)
-        # print(played_move, 'back')
 
 def finalize():
     global moves
@@ -42,11 +41,10 @@ def finalize():
     if avail_moves:
         pref_move = choice(avail_moves)
         MAZE.move(PLAYER, pref_move)
-        # print(pref_move)
     else:
         # move to next step in path(moves[])
-        row, col, played_move = moves.pop(0)
-        PLAYER.set_player_to_tile(MAZE.get_tile(row, col))
+        pos, played_move = moves.pop(0)
+        PLAYER.set_player_to_tile(MAZE.get_tile(pos[0], pos[1]))
 
 def finalize_v2():
     
@@ -69,11 +67,9 @@ def finalize_v2():
 
         pref_move = choice(avail_moves)
         MAZE.move(PLAYER, pref_move)
-        # print(pref_move)
         # start at the next unvisited tile
         try:
             PLAYER.set_player_to_tile(MAZE.get_unvisited_tile())
-            MAZE.tiles[PLAYER.row][PLAYER.col].color = (255, 255, 255)
             MAZE.tiles[PLAYER.row][PLAYER.col].visited = True
         except Exception as e:
             # no unvisited tiles left
@@ -89,7 +85,6 @@ while running:
             pygame.quit()
             exit()
     
-    WINDOW.fill((0, 255, 0))
     MAZE.show_maze(WINDOW)
     PLAYER.draw(WINDOW)
     
@@ -104,8 +99,8 @@ while running:
 
 
 print('Generating fake paths')
-row, col, played_move = moves.pop(0)    # Starting with the start tile
-PLAYER.set_player_to_tile(MAZE.get_tile(row, col))
+pos, played_move = moves.pop(0)    # Starting with the start tile
+PLAYER.set_player_to_tile(MAZE.get_tile(pos[0], pos[1]))
 
 finalizing = True
 while finalizing:
@@ -115,7 +110,6 @@ while finalizing:
             pygame.quit()
             exit()
     
-    WINDOW.fill((0, 255, 0))
     MAZE.show_maze(WINDOW)
     PLAYER.draw(WINDOW)
     
@@ -133,7 +127,6 @@ finalizing_v2 = True
 
 try:
     PLAYER.set_player_to_tile(MAZE.get_unvisited_tile())
-    MAZE.tiles[PLAYER.row][PLAYER.col].color = (255, 255, 255)
     MAZE.tiles[PLAYER.row][PLAYER.col].visited = True
 except Exception as e:
     # no unvisited tiles left
@@ -146,7 +139,6 @@ while finalizing_v2:
             pygame.quit()
             exit()
     
-    WINDOW.fill((0, 255, 0))
     MAZE.show_maze(WINDOW)
     PLAYER.draw(WINDOW)
     
@@ -158,8 +150,6 @@ while finalizing_v2:
 print('completed')
 
 PLAYER.set_player_to_tile(MAZE.get_start_tile())
-MAZE.tiles[PLAYER.row][PLAYER.col].color = (0, 255, 0)
-MAZE.tiles[MAZE.end_tile[0]][MAZE.end_tile[1]].color = (255, 0, 0)
 
 WINDOW.fill((0, 255, 0))
 MAZE.show_maze(WINDOW)
@@ -168,11 +158,13 @@ pygame.display.update()
 
 # save screenshot of maze
 print('Saving image of maze')
-pygame.image.save(WINDOW, 'maze.png')
+pygame.image.save(WINDOW, 'MazeGenerator/maze.png')
 
 # export maze to json
 print('Exporting maze to json')
-MAZE.export_to_json('maze.json')
+MAZE.export_to_json('MazeGenerator/maze.json')
+
+print('Completed \nClose the window to exit')
 
 # wait for user to close window
 while True:
@@ -181,12 +173,8 @@ while True:
             pygame.quit()
             exit()
 
-    WINDOW.fill((0, 255, 0))
     MAZE.show_maze(WINDOW)
     PLAYER.draw(WINDOW)
     
     pygame.display.update()
     clock.tick(FRAMERATE)
-    
-
-pygame.quit()
