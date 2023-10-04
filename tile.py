@@ -14,12 +14,20 @@ class Tile(Sprite):
         self.x = col * self.size + self.size
         self.y = row * self.size + self.size
         self.rect = Rect(self.x, self.y, self.size, self.size)
-        self.color = (0, 255, 0)
-        self.border_color = (255, 0, 0)
+        self.color = (255, 255, 0)
+        self.border_color = (0, 0, 0)
         self.border_width = 2
         self.exclude_moves = set()
+        self.is_start = False
+        self.is_finish = False
 
     def show_tile(self, window):
+        self.color = (255, 255, 255) if self.visited else (255, 255, 0)
+        if self.is_start:
+            self.color = (0, 255, 0)
+        elif self.is_finish:
+            self.color = (255, 0, 0)
+            
         rect(window, self.color, self.rect)
         if self.top:
             line(window, self.border_color, (self.x, self.y), (self.x + self.size, self.y), self.border_width)
