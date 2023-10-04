@@ -1,4 +1,5 @@
 from tile import Tile
+from json import dump
 
 class Maze:
     def __init__(self):
@@ -119,3 +120,28 @@ class Maze:
                 if self.tiles[row][col].visited == False:
                     return self.tiles[row][col]
         return None
+
+    def export_to_json(self, filename):
+        maze = {
+            'size': self.size,
+            'start': self.start_tile,
+            'end': self.end_tile,
+            'tiles': [[None] * self.size[0] for i in range(self.size[1])]
+        }
+
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                tile = self.get_tile(i, j)
+                maze['tiles'][i][j] = {
+                    'visited': tile.visited,
+                    'top': tile.top,
+                    'bottom': tile.bottom,
+                    'left': tile.left,
+                    'right': tile.right,
+                    'row': tile.row,
+                    'col': tile.col,
+                    'color': tile.color
+                }
+
+        with open(filename, 'w') as file:
+            dump(maze, file)

@@ -161,8 +161,18 @@ PLAYER.set_player_to_tile(MAZE.get_start_tile())
 MAZE.tiles[PLAYER.row][PLAYER.col].color = (0, 255, 0)
 MAZE.tiles[MAZE.end_tile[0]][MAZE.end_tile[1]].color = (255, 0, 0)
 
+WINDOW.fill((0, 255, 0))
+MAZE.show_maze(WINDOW)
+PLAYER.draw(WINDOW)
+pygame.display.update()
+
 # save screenshot of maze
+print('Saving image of maze')
 pygame.image.save(WINDOW, 'maze.png')
+
+# export maze to json
+print('Exporting maze to json')
+MAZE.export_to_json('maze.json')
 
 # wait for user to close window
 while True:
