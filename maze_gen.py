@@ -158,11 +158,11 @@ pygame.display.update()
 
 # save screenshot of maze
 print('Saving image of maze')
-pygame.image.save(WINDOW, 'MazeGenerator/maze.png')
+pygame.image.save(WINDOW, 'maze.png')
 
 # export maze to json
 print('Exporting maze to json')
-MAZE.export_to_json('MazeGenerator/maze.json')
+MAZE.export_to_json('maze.json')
 
 print('Completed \nClose the window to exit')
 
